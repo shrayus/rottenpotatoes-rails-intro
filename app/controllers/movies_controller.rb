@@ -15,7 +15,7 @@ class MoviesController < ApplicationController
     
     #Ratings Section
     @all_ratings = Movie.get_ratings
-    if session[:ratings]
+    if session[:ratings] and !params[:ratings]
       @ratings = session[:ratings]
     else
       ratings = params[:ratings]
