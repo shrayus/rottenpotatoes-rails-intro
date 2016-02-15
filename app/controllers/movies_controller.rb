@@ -21,14 +21,14 @@ class MoviesController < ApplicationController
     @movies = @movies.find_all {|m| @ratings.include?(m.rating)}
     
     #Sorting by Title/Release
-    if(params[:sort].to_s == 'title')
+    if(params[:sort] == 'title')
       @movies = @movies.sort_by{|m| m.title }
-    elsif(params[:sort].to_s == 'release')
+    elsif(params[:sort] == 'release')
       @movies = @movies.sort_by{|m| m.release_date.to_s }
     else
       params[:sort] = ''
     end
-    
+    session[:sort] = params[:sort]
   end
 
   def new
