@@ -14,16 +14,21 @@ class MoviesController < ApplicationController
     @movies = Movie.all
     
     #Ratings Section
-    @all_ratings = Movie.get_ratings
-    ratings = params[:ratings]
-    @ratings = ratings.nil? ? Movie.get_ratings : ratings.keys
+    if session[:ratings]
+      @ratings = session[:ratings]
+    else
+      @all_ratings = Movie.get_ratings
+      ratings = params[:ratings]
+      @ratings = ratings.nil? ? Movie.get_ratings : ratings.keys
+      session[:ratings] = @ratings
+    end
     
     @movies = @movies.find_all {|m| @ratings.include?(m.rating)}
     
     #Sorting by Title/Release
-    if(params[:sort] == 'title')
+    if(params[:sort] == 'title' or session[:sort] == 'title')
       @movies = @movies.sort_by{|m| m.title }
-    elsif(params[:sort] == 'release')
+    elsif(params[:sort] == 'release' or session[:sort] == 'release')
       @movies = @movies.sort_by{|m| m.release_date.to_s }
     else
       params[:sort] = ''
@@ -33,6 +38,7 @@ class MoviesController < ApplicationController
 
   def new
     # default: render 'new' template
+    session.clear
   end
 
   def create
