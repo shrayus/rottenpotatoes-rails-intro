@@ -14,17 +14,11 @@ class MoviesController < ApplicationController
     session.clear
     @movies = Movie.all
     
-    #new session
-    if params.empty?
-      session.clear
-    end
-    
     #invalid params
-    if (!params[:ratings] or !params[:sort]) and session[:ratings] and session[:sort]
-      session[:ratings] = params[:ratings] ? params[:ratings] : session[:ratings]
+    if !params[:ratings] and session[:ratings]
       session[:sort] = params[:sort] ? params[:sort] : session[:sort]
-      #flash.keep
-      #redirect_to movies_path(:ratings=>session[:ratings], :sort=>session[:sort])
+      flash.keep
+      redirect_to movies_path(:ratings=>session[:ratings], :sort=>session[:sort])
     end
     
     #Ratings Section
