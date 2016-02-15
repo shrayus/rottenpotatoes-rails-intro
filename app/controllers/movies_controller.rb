@@ -18,8 +18,8 @@ class MoviesController < ApplicationController
     ratings = params[:ratings]
     @ratings = ratings.nil? ? Movie.get_ratings : ratings.keys
     
-    rating_list = "(" + @ratings.to_s[1..-2] + ")" #Because sql arrays have parens instead of bracets T_T 
-    @movies = @movies.where("Rating in " + rating_list)
+    rating_list = "(" + @ratings.to_s[1..-2] + ")" #Because sql arrays have parens instead of brackets T_T 
+    @movies = @movies.where("Rating in " + rating_list) #generate sql query for the website
   
     #Sorting by Title/Release
     if(params[:sort].to_s == 'title')
