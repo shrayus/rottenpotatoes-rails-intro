@@ -12,6 +12,21 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
+    
+    #Ratings Section
+    @all_ratings = Movie.get_ratings
+    ratings = params[:ratings]
+    @ratings = ratings.nil? ? Movie.get_ratings : ratings.keys
+    
+    #Sorting by Title/Release
+    if(params[:sort].to_s == 'title')
+      @movies = @movies.sort_by{|m| m.title }
+    elsif(params[:sort].to_s == 'release')
+      @movies = @movies.sort_by{|m| m.release_date.to_s }
+    else
+      params[:sort] = ''
+    end
+    
   end
 
   def new
