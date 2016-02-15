@@ -13,19 +13,26 @@ class MoviesController < ApplicationController
   def index
     @movies = Movie.all
     
-    #Ratings Section
-    @all_ratings = Movie.get_ratings
-    if session[:ratings] and !params[:ratings]
-      @ratings = session[:ratings]
-    else
-      ratings = params[:ratings]
-      @ratings = ratings.nil? ? Movie.get_ratings : ratings.keys
-      session[:ratings] = @ratings
+    #new session
+    if params.empty?
+      session.clear
     end
     
+    #invalid params
+    if (!params[:ratings] or !params[:sort]) and session[:ratings]
+      session[:ratings] = params[:ratings] if params[:ratings]
+      session[:sort] = params[:sort] if params[:sort]
+      flash.keep
+      redirect_to movies_path(:ratings=>session[:ratings], :sort=>session[:sort])
+    end
+    
+    #Ratings Section
+    @all_ratings = Movie.get_ratings
+    ratings = params[:ratings]
+    @ratings = ratings.nil? ? Movie.get_ratings : ratings.keys
     @movies = @movies.find_all {|m| @ratings.include?(m.rating)}
     
-    #Sorting by Title/Release
+    #Sort by Title/Release
     if(params[:sort] == 'title' or session[:sort] == 'title')
       @movies = @movies.sort_by{|m| m.title }
     elsif(params[:sort] == 'release' or session[:sort] == 'release')
@@ -33,12 +40,14 @@ class MoviesController < ApplicationController
     else
       params[:sort] = ''
     end
+    
+    #save current session
+    session[:ratings] = @ratings
     session[:sort] = params[:sort]
   end
 
   def new
     # default: render 'new' template
-    session.clear
   end
 
   def create
