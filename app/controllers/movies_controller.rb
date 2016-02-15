@@ -15,15 +15,13 @@ class MoviesController < ApplicationController
     
     #invalid params
     if !params[:ratings] and session[:ratings]
-      session[:sort] = params[:sort] ? params[:sort] : session[:sort]
       flash.keep
-      redirect_to movies_path(:ratings=>session[:ratings], :sort=>session[:sort])
+      redirect_to movies_path(:sort=>session[:sort], :ratings=>session[:ratings])
     end
     
     #Ratings Section
-    @all_ratings = Movie.get_ratings
     ratings = params[:ratings]
-    @ratings = ratings.nil? ? Movie.get_ratings : ratings.keys
+    @ratings = ratings.nil? ? Movie.get_ratings : ratings
     @movies = @movies.find_all {|m| @ratings.include?(m.rating)}
     
     #Sort by Title/Release
