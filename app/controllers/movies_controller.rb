@@ -20,7 +20,7 @@ class MoviesController < ApplicationController
     end
     
     #invalid params
-    if (!params[:ratings] or !params[:sort]) and session[:ratings]
+    if (!params[:ratings] or !params[:sort]) and session[:ratings] and session[:sort]
       session[:ratings] = params[:ratings] ? params[:ratings] : session[:ratings]
       session[:sort] = params[:sort] ? params[:sort] : session[:sort]
       flash.keep
