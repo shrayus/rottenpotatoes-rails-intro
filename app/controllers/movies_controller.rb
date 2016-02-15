@@ -20,8 +20,9 @@ class MoviesController < ApplicationController
     end
     
     #Ratings Section
+    @all_ratings = Movie.get_ratings
     ratings = params[:ratings]
-    @ratings = ratings.nil? ? Movie.get_ratings : ratings
+    @ratings = ratings.nil? ? @all_ratings : ratings
     @movies = @movies.find_all {|m| @ratings.include?(m.rating)}
     
     #Sort by Title/Release
