@@ -20,7 +20,7 @@ class MoviesController < ApplicationController
     
     begin
       rating_list = "(" + @ratings.to_s[1..-2] + ")" #Because sql arrays have parens instead of brackets T_T 
-      @movies = @movies.where("rating = 'G'") #generate sql query for the website
+      @movies = @movies.where("rating = ?", "G") #generate sql query for the website
     rescue UndefinedTable, UndefinedColumn
     
     end
