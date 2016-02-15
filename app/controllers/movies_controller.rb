@@ -11,6 +11,7 @@ class MoviesController < ApplicationController
   end
 
   def index
+    session.clear
     @movies = Movie.all
     
     #new session
