@@ -13,6 +13,15 @@ class MoviesController < ApplicationController
   def index
     @movies = Movie.all
     
+    #Sort by Title/Release
+    if(params[:sort] == 'title' or session[:sort] == 'title')
+      @movies = @movies.sort_by{|m| m.title }
+    elsif(params[:sort] == 'release' or session[:sort] == 'release')
+      @movies = @movies.sort_by{|m| m.release_date.to_s }
+    else
+      params[:sort] = ''
+    end
+    
     #invalid params
     if !params[:ratings] and session[:ratings]
       flash.keep
@@ -24,15 +33,6 @@ class MoviesController < ApplicationController
     ratings = params[:ratings]
     @ratings = ratings.nil? ? @all_ratings : ratings
     @movies = @movies.find_all {|m| @ratings.include?(m.rating)}
-    
-    #Sort by Title/Release
-    if(params[:sort] == 'title' or session[:sort] == 'title')
-      @movies = @movies.sort_by{|m| m.title }
-    elsif(params[:sort] == 'release' or session[:sort] == 'release')
-      @movies = @movies.sort_by{|m| m.release_date.to_s }
-    else
-      params[:sort] = ''
-    end
     
     #save current session
     session[:ratings] = @ratings
